@@ -2,16 +2,16 @@ require('dotenv').config();
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
-    // host: 'db4free.net',
-    // port: '3306',
-    // user: 'rubygrv',
-    // password: 'Q089653204923q',
-    // database:'rubygrvdb'
+    host: 'db4free.net',
+    port: '3306',
+    user: 'rubygrv',
+    password: 'Q089653204923q',
+    database:'rubygrvdb'
 
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database:'desacipeundeuydb'
+    // host: 'localhost',
+    // user: 'root',
+    // password: '',
+    // database:'desacipeundeuydb'
 });
 
 connection.connect((err) => {
