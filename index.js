@@ -6,8 +6,6 @@ const appServer = require('./bin/app/server');
 const port = 9001;
 const db = require('./bin/helpers/databases/connection');
 const bodyParser = require('body-parser');
-const controller = require("./controller/file.controller");
-global.__basedir = __dirname;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -451,14 +449,5 @@ app.get('/kepala-desa', (req, res) => {
     });
 });
 // KEPALA DESA API START
-
-
-
-
-
-
-app.post('/upload', controller.upload);
-app.post('/files', controller.getListFiles);
-app.post('/files/:name', controller.download);
 
 
