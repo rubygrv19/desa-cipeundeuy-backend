@@ -22,7 +22,37 @@ const statusCode = {
 };
 
 
+// LOGIN API START
+app.post('/login', (req, res) => {
+    res.writeHead(statusCode.success, {
+        'Content-Type': 'application/json'
+    });
 
+    let username = req.body.username;
+    let password = req.body.password;
+
+    if (username && password) {
+        let sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
+        db.query(sql, [username, password], (err, result) => {
+            if (err) throw err;
+
+            res.write(JSON.stringify({
+                statusCode: 200,
+                message: 'Successfully login',
+            }));
+            res.end();
+        });
+    } else {
+        res.write(JSON.stringify({
+            statusCode: 400,
+            message: 'Please enter Username and Password!',
+        }));
+        res.end();
+    }
+});
+// LOGIN API START
+
+// ======================================================================================================================================
 
 // DASHBOARD API START
 app.get('/dashboard', (req, res) => {
@@ -449,5 +479,3 @@ app.get('/kepala-desa', (req, res) => {
     });
 });
 // KEPALA DESA API START
-
-
