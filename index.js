@@ -36,15 +36,22 @@ app.post('/login', (req, res) => {
         db.query(sql, [username, password], (err, result) => {
             if (err) throw err;
 
-            res.write(JSON.stringify({
-                statusCode: 200,
-                message: 'Successfully login',
-            }));
+            if (result.length > 0) {
+                res.write(JSON.stringify({
+                    statusCode: 200,
+                    message: 'Successfully login',
+                }));
+            } else {
+                res.write(JSON.stringify({
+                    statusCode: 400,
+                    message: 'Incorrect Username and/or Password!',
+                }));
+            }
             res.end();
         });
     } else {
         res.write(JSON.stringify({
-            statusCode: 400,
+            statusCode: 409,
             message: 'Please enter Username and Password!',
         }));
         res.end();
