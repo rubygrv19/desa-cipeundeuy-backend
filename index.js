@@ -1,75 +1,64 @@
-require('dotenv').config();
-const express = require('express');
-const app = express();
-const cors = require('cors')
-const appServer = require('./bin/app/server');
+const express = require("express");
 const port = 9001;
-const db = require('./bin/helpers/databases/connection');
 const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload')
-const path = require('path');
+const appServer = require('./bin/app/server');
+const db = require('./bin/helpers/databases/connection');
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-app.use(fileUpload());
+const cors = require('cors');
+const path = require("path");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const multer = require("multer");
+const imgur = require("imgur");
+const fs = require("fs");
 
+const storage = multer.diskStorage({
+    destination: "./uploads",
+    filename: (req, file, callback) => {
+        callback(
+            null,
+            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
+const upload = multer({
+    storage: storage,
+});
+
+const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+app.use(morgan('dev'));
+app.use(helmet());
+app.use(express.json({
+    extended: false
+}));
+app.use(express.urlencoded({
+    extended: true
+}));
+app.use(upload.any());
+
 app.listen(port, () => {
     const ctx = 'app-listen';
     console.log(ctx, `${appServer.name} started, listening at http://localhost:${port}`, 'initate application');
 });
 
-
-
-
 const statusCode = {
     success: 200,
 };
 
-app.post('/upload', (req, res) => {
-    message = '';
-    if (!req.files)
-        return res.status(400).send('No files were uploaded.');
-
-    let file = req.files.uploaded_image;
-    let img_name = file.name;
-    let created_date = new Date();
-
-    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.mimetype == "image/gif") {
-
-        file.mv('public/images/upload_images/' + file.name, function (err) {
-
-            if (err)
-                return res.status(500).send(err);
-            let sql = "INSERT INTO image (image, created_date) VALUES (?, ?)";
-
-            db.query(sql, [img_name, created_date], (err, result) => {
-                // res.redirect('profile/' + result.insertId);
-            });
-
-            res.end();
+app.post("/upolads/", async (req, res) => {
+    const file = req.files[0];
+    try {
+        const url = await imgur.uploadFile(`./uploads/${file.filename}`);
+        res.json({
+            message: url
         });
+        fs.unlinkSync(`./uploads/${file.filename}`);
+    } catch (error) {
+        console.log("error", error);
     }
-
 });
-
-app.get('/image/:id', (req, res) => {
-
-    let id = req.params.id;
-    
-    db.query('SELECT * FROM image WHERE id = ?', [id], (err, result) => {
-        if (err) throw err;
-
-        res.sendFile(path.join(__dirname, 'public/images/upload_images/', result[0].image));
-        return
-    });
-});
-
-
 
 // LOGIN API START
 app.post('/login', (req, res) => {
