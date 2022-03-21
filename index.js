@@ -6,6 +6,15 @@ const appServer = require('./bin/app/server');
 const port = 9001;
 const db = require('./bin/helpers/databases/connection');
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload')
+const path = require('path');
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(fileUpload());
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -20,6 +29,46 @@ app.listen(port, () => {
 const statusCode = {
     success: 200,
 };
+
+app.post('/upload', (req, res) => {
+    message = '';
+    if (!req.files)
+        return res.status(400).send('No files were uploaded.');
+
+    let file = req.files.uploaded_image;
+    let img_name = file.name;
+    let created_date = new Date();
+
+    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png" || file.mimetype == "image/gif") {
+
+        file.mv('public/images/upload_images/' + file.name, function (err) {
+
+            if (err)
+                return res.status(500).send(err);
+            let sql = "INSERT INTO image (image, created_date) VALUES (?, ?)";
+
+            db.query(sql, [img_name, created_date], (err, result) => {
+                // res.redirect('profile/' + result.insertId);
+            });
+
+            res.end();
+        });
+    }
+
+});
+
+app.get('/image/:id', (req, res) => {
+
+    let id = req.params.id;
+    
+    db.query('SELECT * FROM image WHERE id = ?', [id], (err, result) => {
+        if (err) throw err;
+
+        res.sendFile(path.join(__dirname, 'public/images/upload_images/', result[0].image));
+        return
+    });
+});
+
 
 
 // LOGIN API START
