@@ -26,8 +26,8 @@ const upload = multer({
 });
 
 const app = express();
-app.use(bodyParser.json());
 app.use(cors());
+app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(express.json({
