@@ -12,18 +12,14 @@ const multer = require("multer");
 const imgur = require("imgur");
 const fs = require("fs");
 
-const storage = multer.diskStorage({
-    destination: "./uploads",
-    filename: (req, file, callback) => {
-        callback(
-            null,
-            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-        );
+const storage = multer.memoryStorage({
+    destination: function (req, file, callback) {
+        callback(null, "");
     },
 });
 const upload = multer({
-    storage: storage,
-});
+    storage: storage
+})
 
 const app = express();
 app.use(cors());
@@ -36,7 +32,7 @@ app.use(express.json({
 app.use(express.urlencoded({
     extended: true
 }));
-app.use(upload.any());
+// app.use(upload.any());
 
 app.listen(port, () => {
     const ctx = 'app-listen';
@@ -47,18 +43,37 @@ const statusCode = {
     success: 200,
 };
 
-app.post("/upolads/", async (req, res) => {
-    const file = req.files[0];
+app.post('/upolads/', upload.single('files'), async (req, res, next) => {
+    let file = req.file.buffer;
+
+    let buff = new Buffer(file);
+    let base64data = buff.toString('base64');
+
+    console.log(base64data)
+    // return
     try {
-        const url = await imgur.uploadFile(`./uploads/${file.filename}`);
+        const url = await imgur.uploadBase64(base64data);
         res.json({
             message: url
         });
-        fs.unlinkSync(`./uploads/${file.filename}`);
     } catch (error) {
         console.log("error", error);
     }
-});
+})
+
+// app.post("/upolads/", async (req, res) => {
+//     const file = req.files[0];
+//     try {
+//         const url = await imgur.uploadFile(`./uploads/${file.filename}`);
+//         res.json({
+//             message: url
+//         });
+//         fs.unlinkSync(`./uploads/${file.filename}`);
+//     } catch (error) {
+//         console.log("error", error);
+//     }
+// });
+
 
 // LOGIN API START
 app.post('/login', (req, res) => {
