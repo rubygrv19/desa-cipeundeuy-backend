@@ -18,7 +18,8 @@ const storage = multer.memoryStorage({
     },
 });
 const upload = multer({
-    storage: storage
+    storage: storage,
+
 })
 
 const app = express();
@@ -49,7 +50,6 @@ app.post('/upolads/', upload.single('files'), async (req, res, next) => {
     let buff = new Buffer(file);
     let base64data = buff.toString('base64');
 
-    console.log(base64data)
     // return
     try {
         const url = await imgur.uploadBase64(base64data);
