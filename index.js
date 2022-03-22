@@ -412,6 +412,22 @@ app.get('/berita', (req, res) => {
     });
 });
 
+
+app.get('/berita?', (req, res) => {
+    res.writeHead(statusCode.success, {
+        'Content-Type': 'text/json'
+    });
+
+    let search = req.query.search;
+
+    db.query('SELECT * FROM berita WHERE title LIKE %?%', [search], (err, result) => {
+        if (err) throw err;
+
+        res.write(JSON.stringify(result));
+        res.end();
+    });
+});
+
 app.get('/berita/slug/:slug', (req, res) => {
     res.writeHead(statusCode.success, {
         'Content-Type': 'text/json'
