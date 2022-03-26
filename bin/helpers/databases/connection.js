@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
     // database:'desacipeundeuydb'
 
     // DB Hosting
-    host: 'srv143.niagahoster.com',
+    host: 'srv152.niagahoster.com',
     port: '3306',
     user: 'u1652720_kkndesacipeundeuy_root',
     password: 'kkndesacipeundeuy2022',
