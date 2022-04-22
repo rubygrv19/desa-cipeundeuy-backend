@@ -249,10 +249,11 @@ app.post('/pariwisata', (req, res) => {
     let opening_hours = req.body.opening_hours;
     let closing_hours = req.body.closing_hours;
     let image_id = req.body.image_id;
+    let image_cover = req.body.image_cover;
     let created_date = new Date();
 
-    let sql = 'INSERT INTO pariwisata (title, price, location, opening_hours, closing_hours, image_id, created_date) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    db.query(sql, [title, price, location, opening_hours, closing_hours, image_id, created_date], (err, result) => {
+    let sql = 'INSERT INTO pariwisata (title, price, location, opening_hours, closing_hours, image_id, image_cover, created_date) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.query(sql, [title, price, location, opening_hours, closing_hours, image_id, image_cover, created_date], (err, result) => {
         if (err) throw err;
 
         res.write(JSON.stringify({
@@ -275,10 +276,11 @@ app.put('/pariwisata', (req, res) => {
     let opening_hours = req.body.opening_hours;
     let closing_hours = req.body.closing_hours;
     let image_id = req.body.image_id;
+    let image_cover = req.body.image_cover;
     let created_date = new Date();
 
-    let sql = 'UPDATE pariwisata SET title = ?, price = ?, location = ?, opening_hours = ?, closing_hours = ?, image_id = ?, created_date = ? WHERE id = ?';
-    db.query(sql, [title, price, location, opening_hours, closing_hours, image_id, created_date, id], (err, result) => {
+    let sql = 'UPDATE pariwisata SET title = ?, price = ?, location = ?, opening_hours = ?, closing_hours = ?, image_id = ?, image_cover = ?, created_date = ? WHERE id = ?';
+    db.query(sql, [title, price, location, opening_hours, closing_hours, image_id, image_cover, created_date, id], (err, result) => {
         if (err) throw err;
 
         res.write(JSON.stringify({
