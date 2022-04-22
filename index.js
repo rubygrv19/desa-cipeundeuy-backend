@@ -252,7 +252,7 @@ app.post('/pariwisata', (req, res) => {
     let image_cover = req.body.image_cover;
     let created_date = new Date();
 
-    let sql = 'INSERT INTO pariwisata (title, price, location, opening_hours, closing_hours, image_id, image_cover, created_date) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    let sql = 'INSERT INTO pariwisata (title, price, location, opening_hours, closing_hours, image_id, image_cover, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     db.query(sql, [title, price, location, opening_hours, closing_hours, image_id, image_cover, created_date], (err, result) => {
         if (err) throw err;
 
