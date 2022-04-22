@@ -348,6 +348,7 @@ app.post('/umkm', (req, res) => {
     });
 
     let title = req.body.title;
+    let description = req.body.description;
     let price = req.body.price;
     let location = req.body.location;
     let opening_hours = req.body.opening_hours;
@@ -355,7 +356,7 @@ app.post('/umkm', (req, res) => {
     let image_id = req.body.image_id;
     let created_date = new Date();
 
-    let sql = 'INSERT INTO umkm (title, price, location, opening_hours, closing_hours, image_id, created_date) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    let sql = 'INSERT INTO umkm (title, description, price, location, opening_hours, closing_hours, image_id, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     db.query(sql, [title, price, location, opening_hours, closing_hours, image_id, created_date], (err, result) => {
         if (err) throw err;
 
@@ -374,6 +375,7 @@ app.put('/umkm', (req, res) => {
 
     let id = req.body.id;
     let title = req.body.title;
+    let description = req.body.description;
     let price = req.body.price;
     let location = req.body.location;
     let opening_hours = req.body.opening_hours;
@@ -381,8 +383,8 @@ app.put('/umkm', (req, res) => {
     let image_id = req.body.image_id;
     let created_date = new Date();
 
-    let sql = 'UPDATE umkm SET title = ?, price = ?, location = ?, opening_hours = ?, closing_hours = ?, image_id = ?, created_date = ? WHERE id = ?';
-    db.query(sql, [title, price, location, opening_hours, closing_hours, image_id, created_date, id], (err, result) => {
+    let sql = 'UPDATE umkm SET title = ?, description = ?, price = ?, location = ?, opening_hours = ?, closing_hours = ?, image_id = ?, created_date = ? WHERE id = ?';
+    db.query(sql, [title, description, price, location, opening_hours, closing_hours, image_id, created_date, id], (err, result) => {
         if (err) throw err;
 
         res.write(JSON.stringify({
